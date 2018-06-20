@@ -3,12 +3,12 @@
 <script>
 tests({
 
-  'adds numbers': function() {
+  'adds numbers': () => {
     eq(6, add(2, 4));
     eq(6.6, add(2.6, 4));
   },
 
-  'subtracts numbers': function() {
+  'subtracts numbers': () => {
     eq(-2, add(2, -4));
   },
 
