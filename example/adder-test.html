@@ -24,9 +24,15 @@
 // 	console.log(originalArray);
 // });
 
-var forEach = (array, callback) => {
+var forEach = (array, callback, optionalThisObject) => {
+	var forEachCallback = callback;
+
+	if (optionalThisObject) {
+		forEachCallback = callback.bind(optionalThisObject);
+	}
+
 	for (let i = 0; i < array.length; i++) {
-		callback(array[i], i, array);
+		forEachCallback(array[i], i, array);
 	}
 }
 
@@ -54,10 +60,27 @@ tests({
 
 	'It should pass the original array as the third argument to the callback.': () => {
 		var array = [1, 2, 3];
-		forEach(array, (element, index, originalArray) => {
+		forEach(array, (element, index, originalArray) => {	
 			eq(array, originalArray);
 		});
 	},
+
+	'It should accept an optional this object.': () => {
+		forEach([1], function () {
+			eq(this.description, 'I should be accessible inside of a callback.');
+		}, {description: 'I should be accessible inside of a callback.'});
+	},
+
+	// Arrow functions don't have their own this binding. Instead, this is looked up 
+	// in scope just like a normal variable. That means you don't have to call .bind. 
+	// That's not the only special behaviour they have, please refer to the MDN 
+	// documentation for more information.
+
+	// 'It should accept an optional this object.': () => {
+	// 	forEach([1], () => {
+	// 		eq(this.description, 'I should be accessible inside of a callback.');
+	// 	}, {description: 'I should be accessible inside of a callback.'});
+	// }
 
 });
 
